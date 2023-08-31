@@ -1,18 +1,35 @@
 import "./App.css";
 import Form from "./components/Form/Form.js";
-import { useState } from "react";
+import List from "./components/List/List.js";
+import useLocalStorageState from "use-local-storage-state";
 
 export default function App() {
-  const [activities, SetActivities] = useState([]);
+  const [activities, setActivities] = useLocalStorageState("activities", {
+    defaultValue: [],
+  });
+  const [isForGoodWeather, setIsForGoodWeather] = useLocalStorageState(
+    "isForGoodWeather",
+    { defaultValue: false }
+  );
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-
-    onAddActivity(data);
-    event.target.reset();
+  function handleIsForGoodWeahter() {
+    setIsForGoodWeather(!isForGoodWeather);
   }
 
-  return <Form onAddActivity={handleSubmit} />;
+  function handleAddActivity(dataObject) {
+    setActivities(dataObject.activity);
+    setIsForGoodWeather(dataObject.weather.checked);
+    console.log(activities, isForGoodWeather);
+  }
+
+  return (
+    <div>
+      <h1> Weather App</h1>
+      <Form
+        onAddActivity={handleAddActivity}
+        onChecked={handleIsForGoodWeahter}
+      />
+      <List activities={activities} />
+    </div>
+  );
 }

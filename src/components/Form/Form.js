@@ -1,11 +1,18 @@
-export default function Form({ onAddActivity }) {
+import { uid } from "uid";
+
+export default function Form({ onAddActivities }) {
   function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
 
-    onAddActivity(data);
-    event.target.reset();
+    const form = event.target;
+    const formElement = form.elements;
+
+    const data = {
+      name: formElement.name.value,
+      isForGoodWeather: formElement.isForGoodWeather.checked,
+      id: uid(),
+    };
+    onAddActivities(data);
   }
 
   return (
@@ -14,7 +21,7 @@ export default function Form({ onAddActivity }) {
       <form
         className="form"
         aria-labelledby="form-activities"
-        onSubmit={onAddActivity}
+        onSubmit={handleSubmit}
       >
         <label htmlFor="activity">Name of Activity </label>
         <input
@@ -25,7 +32,7 @@ export default function Form({ onAddActivity }) {
         />
 
         <label htmlFor="weather-check">Good weather activity? </label>
-        <input id="weather-check" type="checkbox" name="weather-check" />
+        <input id="weather-check" type="checkbox" name="ForGoodWeather" />
         <button type="submit" className="form__submit-button">
           Submit
         </button>
